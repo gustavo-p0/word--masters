@@ -54,12 +54,12 @@ body {
   font-family: "Roboto Flex", sans-serif;
   min-height: 100vh;
   background-color: var(--primary);
-  padding: 87px 0px;
+  padding: 20px 0px;
 }
 
 header {
   max-width: 440px;
-  margin: 0px auto 87px;
+  margin: 0px auto 0px;
   text-align: center;
   padding: 18px 0px;
   background-color: var(--group-bg);
@@ -79,7 +79,7 @@ header > h1 {
 #letterboard {
   max-width: 440px;
   padding-inline: 20px;
-  margin: 110px auto 55px;
+  margin: 20px auto;
   display: flex;
   flex-direction: column;
   row-gap: 11px;
