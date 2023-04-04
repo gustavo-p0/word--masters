@@ -9,7 +9,8 @@ spinner.alt = "Spinner Loader";
 spinner.classList.add("spinner");
 
 let puzzle = null;
-puzzle = getWord();
+// puzzle = getWord();
+puzzle = { word: "block" };
 
 let currentChance = 0;
 let currentSentenceDisplay = Array.from(sentences[currentChance].children);
@@ -146,26 +147,40 @@ async function validateWord(word) {
 function checkWord(word) {
   const wordTarget = [...word.toLowerCase()];
   const puzzleTarget = [...puzzle.word];
-  const almostLetters = [];
   for (let i = 0; i < wordTarget.length; i++) {
-    addLetterClass(i, "away", almostLetters);
+    addLetterClass(i, "away");
+    if (wordTarget[i] === puzzleTarget[i]) {
+      addLetterClass(i, "success");
+      continue;
+    }
     for (let j = 0; j < puzzleTarget.length; j++) {
-      if (wordTarget[i] === puzzleTarget[i]) {
-        addLetterClass(i, "success", almostLetters);
-        break;
-      } else if (
-        wordTarget[i] === puzzleTarget[j] &&
-        !almostLetters.includes(wordTarget[i])
-      ) {
-        addLetterClass(i, "almost", almostLetters);
-        almostLetters.push(wordTarget[i]);
-        break;
+      if (wordTarget[i] === puzzleTarget[j]) {
+        if (wordTarget[i] === wordTarget[j]) {
+          continue;
+        } else {
+          addLetterClass(i, "almost");
+          break;
+        }
       }
     }
   }
   return word.toLowerCase() === puzzle.word;
 }
 
+function getIndexes(letter, word) {
+  const indexes = new Map();
+  for (let i = 0; i < word.length; i++) {
+    indexes.set(word[i], 0);
+  }
+
+  for (let i = 0; i < word.length; i++) {
+    let count = indexes.get(word[i]);
+    count++;
+    indexes.set(word[i], count);
+  }
+
+  return indexes.get(letter);
+}
 async function getWord() {
   try {
     puzzle = await axios(
@@ -182,7 +197,7 @@ function toggleDisplayError() {
   });
 }
 
-function addLetterClass(index, className, almostLetters) {
+function addLetterClass(index, className) {
   const letter = currentSentenceDisplay[index];
   letter.classList.remove("away");
   letter.classList.add(className);
