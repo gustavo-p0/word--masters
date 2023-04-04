@@ -9,8 +9,7 @@ spinner.alt = "Spinner Loader";
 spinner.classList.add("spinner");
 
 let puzzle = null;
-// puzzle = getWord();
-puzzle = { word: "levee" };
+puzzle = getWord();
 
 let currentChance = 0;
 let currentSentenceDisplay = Array.from(sentences[currentChance].children);
