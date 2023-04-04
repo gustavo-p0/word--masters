@@ -10,7 +10,7 @@ spinner.classList.add("spinner");
 
 let puzzle = null;
 // puzzle = getWord();
-puzzle = { word: "block" };
+puzzle = { word: "levee" };
 
 let currentChance = 0;
 let currentSentenceDisplay = Array.from(sentences[currentChance].children);
@@ -147,6 +147,7 @@ async function validateWord(word) {
 function checkWord(word) {
   const wordTarget = [...word.toLowerCase()];
   const puzzleTarget = [...puzzle.word];
+  const almostLetters = [];
   for (let i = 0; i < wordTarget.length; i++) {
     addLetterClass(i, "away");
     if (wordTarget[i] === puzzleTarget[i]) {
@@ -157,8 +158,9 @@ function checkWord(word) {
       if (wordTarget[i] === puzzleTarget[j]) {
         if (wordTarget[i] === wordTarget[j]) {
           continue;
-        } else {
+        } else if (!almostLetters.includes(wordTarget[i])) {
           addLetterClass(i, "almost");
+          almostLetters.push(wordTarget[i]);
           break;
         }
       }
