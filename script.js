@@ -98,13 +98,12 @@ async function run() {
 
 function success() {
   currentChance = 5;
-  alert("Você ganhou!");
   currentIndex = 0;
   updateCurrentSentenceDisplay();
 }
 
 function failed() {
-  alert(`Você falhou ao achar a palavra, ${puzzle.word}!`);
+  alert(`End game, word: ${puzzle.word}!`);
 }
 function makeWord() {
   if (currentIndex === 5) {
@@ -149,19 +148,17 @@ function checkWord(word) {
   const puzzleTarget = [...puzzle.word];
   const almostLetters = [];
   for (let i = 0; i < wordTarget.length; i++) {
-    addLetterClass(i, "away");
-    let parcial = wordTarget.slice(0, i);
+    addLetterClass(i, "away", almostLetters);
     for (let j = 0; j < puzzleTarget.length; j++) {
       if (wordTarget[i] === puzzleTarget[i]) {
-        addLetterClass(i, "success");
+        addLetterClass(i, "success", almostLetters);
         break;
       } else if (
         wordTarget[i] === puzzleTarget[j] &&
         !almostLetters.includes(wordTarget[i])
       ) {
-        addLetterClass(i, "almost");
+        addLetterClass(i, "almost", almostLetters);
         almostLetters.push(wordTarget[i]);
-        console.log(wordTarget[i]);
         break;
       }
     }
@@ -185,22 +182,18 @@ function toggleDisplayError() {
   });
 }
 
-function addLetterClass(index, className) {
+function addLetterClass(index, className, almostLetters) {
   const letter = currentSentenceDisplay[index];
   letter.classList.remove("away");
-  if (
-    letter.classList.contains("almost") ||
-    letter.classList.contains("success")
-  ) {
-    console.log("a");
-    return;
-  }
   letter.classList.add(className);
-  for (let i = keyboardButtons.length - 1; i >= 0; i--) {
+  for (let i = 0; i < keyboardButtons.length; i++) {
     const btn = keyboardButtons[i];
     if (btn.textContent === letter.textContent) {
       btn.classList.remove("away");
       btn.classList.add(className);
+      if (btn.classList.contains("almost")) {
+        btn.classList.remove("away");
+      }
       if (btn.classList.contains("away")) {
         btn.setAttribute("disabled", "");
         invalidLetters.push(btn.textContent);
@@ -219,3 +212,9 @@ function toggleSpinner() {
     header.appendChild(spinner);
   }
 }
+
+allLetters.forEach((letter) =>
+  letter.addEventListener("animationend", (e) => {
+    letter.classList.remove("shake-error");
+  })
+);
